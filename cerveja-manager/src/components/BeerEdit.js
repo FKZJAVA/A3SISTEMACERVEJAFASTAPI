@@ -1,32 +1,38 @@
 import React, { useState } from 'react';
 import api from '../api';
 
-function BeerForm() {
+function BeerEdit() {
+  const [id, setId] = useState('');
   const [nome, setNome] = useState('');
+  const [estoque, setEstoque] = useState('');
   const [valor, setValor] = useState('');
-  const [estoque, setEstoque] = useState(0);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    api.post('/cervejas/', { nome, valor, estoque })
-      .then(() => {
-        setNome('');
-        setValor('');
-        setEstoque(0);
-        alert('Cerveja adicionada com sucesso!');
-      })
-      .catch(error => console.error('Erro ao adicionar cerveja:', error));
+    try {
+      await api.put(`/cervejas/${id}`, { nome, estoque: parseInt(estoque), valor: parseFloat(valor) });
+      alert('Cerveja atualizada com sucesso!');
+      setId('');
+      setNome('');
+      setEstoque('');
+      setValor('');
+    } catch (error) {
+      console.error('Erro ao atualizar cerveja:', error);
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Adicionar Nova Cerveja</h2>
-      <input type="text" placeholder="Nome" value={nome} onChange={(e) => setNome(e.target.value)} required />
-      <input type="number" placeholder="Valor" value={valor} onChange={(e) => setValor(e.target.value)} required />
-      <input type="number" placeholder="Estoque" value={estoque} onChange={(e) => setEstoque(e.target.value)} />
-      <button type="submit">Adicionar</button>
-    </form>
+    <div>
+      <h1>Editar Cerveja</h1>
+      <form onSubmit={handleSubmit}>
+        <input placeholder="ID" value={id} onChange={(e) => setId(e.target.value)} required />
+        <input placeholder="Nome" value={nome} onChange={(e) => setNome(e.target.value)} />
+        <input placeholder="Estoque" value={estoque} onChange={(e) => setEstoque(e.target.value)} />
+        <input placeholder="Valor" value={valor} onChange={(e) => setValor(e.target.value)} />
+        <button type="submit">Atualizar</button>
+      </form>
+    </div>
   );
 }
 
-export default BeerForm;
+export default BeerEdit;

@@ -5,6 +5,7 @@ import BeerList from './components/BeerList';
 import BeerCreate from './components/BeerCreate';
 import BeerEdit from './components/BeerEdit';
 import BeerDelete from './components/BeerDelete';
+import './App.css';
 
 function App() {
   return (
